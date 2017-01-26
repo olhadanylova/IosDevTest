@@ -10,6 +10,10 @@
 #import "ProductDetailsViewController.h"
 #import "Backendless.h"
 
+static NSString *APP_ID = @"7272A465-A10C-B8FC-FFFC-EC6FAB58BA00";
+static NSString *SECRET_KEY = @"5FED2132-3B26-38D4-FF91-8B08B265B600";
+static NSString *VERSION = @"v1";
+
 @interface AppDelegate () <UISplitViewControllerDelegate>
 @end
 
@@ -21,31 +25,10 @@
     navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
     splitViewController.delegate = self;
     
-    [backendless initApp:@"7272A465-A10C-B8FC-FFFC-EC6FAB58BA00"
-                  secret:@"5FED2132-3B26-38D4-FF91-8B08B265B600"
-                 version:@"v1"];
+    // Backendless application initialization.
+    [backendless initApp:APP_ID secret:SECRET_KEY version:VERSION];
     
     return YES;
-}
-
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-}
-
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-}
-
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-}
-
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-}
-
-
-- (void)applicationWillTerminate:(UIApplication *)application {
 }
 
 

@@ -1,5 +1,5 @@
 //
-//  MasterViewController.h
+//  ProductsViewController.h
 //  IosDevTest
 //
 //  Created by Olha Danylova on 26.01.17.
@@ -11,6 +11,10 @@
 @class ProductDetailsViewController;
 
 @interface ProductsViewController : UITableViewController
+
 @property (strong, nonatomic) ProductDetailsViewController *detailViewController;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *buttonLoadMore;
+- (IBAction)pressedLoadMore:(id)sender;
+
 @end
 

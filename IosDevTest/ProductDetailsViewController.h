@@ -1,5 +1,5 @@
 //
-//  DetailViewController.h
+//  ProductDetailsViewController.h
 //  IosDevTest
 //
 //  Created by Olha Danylova on 26.01.17.
@@ -10,7 +10,7 @@
 
 @interface ProductDetailsViewController : UIViewController
 
-//@property (strong, nonatomic) NSDate *detailItem;
+@property (strong, nonatomic) NSDate *detailItem;
 //@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
 
 @end

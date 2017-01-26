@@ -15,6 +15,7 @@
 		5E3BEB511E3A777C00CDD0CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E3BEB4F1E3A777C00CDD0CE /* Main.storyboard */; };
 		5E3BEB531E3A777C00CDD0CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5E3BEB521E3A777C00CDD0CE /* Assets.xcassets */; };
 		5E3BEB561E3A777C00CDD0CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5E3BEB541E3A777C00CDD0CE /* LaunchScreen.storyboard */; };
+		5EE2ADBA1E3A830B00CBD877 /* Product.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE2ADB91E3A830B00CBD877 /* Product.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,8 @@
 		5E3BEB521E3A777C00CDD0CE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5E3BEB551E3A777C00CDD0CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5E3BEB571E3A777C00CDD0CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5EE2ADB81E3A830B00CBD877 /* Product.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Product.h; sourceTree = "<group>"; };
+		5EE2ADB91E3A830B00CBD877 /* Product.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Product.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +71,7 @@
 		5E3BEB421E3A777C00CDD0CE /* IosDevTest */ = {
 			isa = PBXGroup;
 			children = (
+				5EE2ADB71E3A828F00CBD877 /* Product */,
 				5E3BEB5D1E3A791B00CDD0CE /* View Controllers */,
 				5E3BEB461E3A777C00CDD0CE /* AppDelegate.h */,
 				5E3BEB471E3A777C00CDD0CE /* AppDelegate.m */,
@@ -97,6 +101,15 @@
 				5E3BEB4D1E3A777C00CDD0CE /* ProductDetailsViewController.m */,
 			);
 			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		5EE2ADB71E3A828F00CBD877 /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				5EE2ADB81E3A830B00CBD877 /* Product.h */,
+				5EE2ADB91E3A830B00CBD877 /* Product.m */,
+			);
+			name = Product;
 			sourceTree = "<group>";
 		};
 		6C360C4A92B0C75CB088EF72 /* Frameworks */ = {
@@ -241,6 +254,7 @@
 			files = (
 				5E3BEB481E3A777C00CDD0CE /* AppDelegate.m in Sources */,
 				5E3BEB4B1E3A777C00CDD0CE /* ProductsViewController.m in Sources */,
+				5EE2ADBA1E3A830B00CBD877 /* Product.m in Sources */,
 				5E3BEB451E3A777C00CDD0CE /* main.m in Sources */,
 				5E3BEB4E1E3A777C00CDD0CE /* ProductDetailsViewController.m in Sources */,
 			);
@@ -401,6 +415,7 @@
 				5E3BEB5C1E3A777C00CDD0CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

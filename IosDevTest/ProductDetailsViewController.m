@@ -1,5 +1,5 @@
 //
-//  DetailViewController.m
+//  ProductDetailsViewController.m
 //  IosDevTest
 //
 //  Created by Olha Danylova on 26.01.17.

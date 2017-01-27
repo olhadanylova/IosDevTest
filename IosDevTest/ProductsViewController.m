@@ -8,10 +8,11 @@
 
 #import "ProductsViewController.h"
 #import "ProductDetailsViewController.h"
+#import "CustomCell.h"
 #import "Backendless.h"
 #import "Product.h"
 
-#define PAGESIZE 10
+#define PAGESIZE 3
 
 static long size;
 static int offset;
@@ -19,6 +20,7 @@ static int offset;
 @interface ProductsViewController () {
     BackendlessDataQuery *query;
     int numberOfRows;
+    NSMutableArray *loadedProducts;
 }
 @end
 
@@ -27,6 +29,7 @@ static int offset;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.detailViewController = (ProductDetailsViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    loadedProducts = [[NSMutableArray alloc] init];
     [self retrieveProductsOnLoad];
 }
 
@@ -44,7 +47,6 @@ static int offset;
     offset = 0;
     query = [BackendlessDataQuery query];
     query.queryOptions.pageSize = @(PAGESIZE);
-    
     [[backendless.persistenceService of:[Product class]] find:query
                                                      response:^(BackendlessCollection *products) { [self getPageAsync:products offset:offset]; }
                                                         error:^(Fault *fault) { NSLog(@"Server reported an error: %@", fault); }];
@@ -52,16 +54,72 @@ static int offset;
 
 
 - (void)getPageAsync:(BackendlessCollection *)products offset:(int)offset {
+    for (Product *p in [products getCurrentPage]) [loadedProducts addObject:p];
+    [self loadImagesAsync];
     // Current products count.
     size = [[products getCurrentPage] count];
     if (!size) return;
-    NSLog(@"Loaded %lu product in the current page", size);
-    
-    // Reload table view.
     numberOfRows += size;
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
-    NSArray *prod = [[[backendless.persistenceService of:[Product class]] find:nil] data];
-    if (numberOfRows == [prod count]) self.buttonLoadMore.enabled = NO;
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+    
+    // Scroll to the last cell.
+        NSIndexPath* ip = [NSIndexPath indexPathForRow:([loadedProducts count] - 1) inSection:0];
+        [self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
+}
+
+
+// Images load asynchronically from product image URL
+- (void)loadImagesAsync {
+    for (int i = 0; i < [loadedProducts count]; i++) {
+        Product *p = loadedProducts[i];
+        if (!p.image && p.imageURL) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                           ^{
+                               NSURL *imageURL = [NSURL URLWithString:p.imageURL];
+                               NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+                               
+                               //This is your completion handler
+                               dispatch_sync(dispatch_get_main_queue(), ^{
+                                   //If self.image is atomic (not declared with nonatomic)
+                                   // you could have set it directly above
+                                   p.image = [UIImage imageWithData:imageData];
+                                   // Reload product cell to show image
+                                   NSIndexPath *ip = [NSIndexPath indexPathForRow:i inSection:0];
+                                   [self.tableView reloadRowsAtIndexPaths:@[ip] withRowAnimation:UITableViewRowAnimationFade];
+                                   
+                               });
+                           });
+        }
+    }
+}
+
+
+- (void)reloadTableViewAfterGetPage {
+    
+    numberOfRows += size;
+    
+    
+    //
+    
+    // Scroll to the last cell.
+    //    NSIndexPath* ip = [NSIndexPath indexPathForRow:([loadedProducts count] - 1) inSection:0];
+    //    [self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    
+    
+    
+    
+    //
+    
+    // If all data is displeyed Load More button disabled.
+    //    BackendlessCollection *products = [[backendless.persistenceService of:[Product class]] find:nil];
+    //    if (numberOfRows == [[products getCurrentPage] count]) {
+    //        self.buttonLoadMore.enabled = NO;
+    //        self.buttonLoadMore.title = @"All data loaded";
+    //    }
+    //    else {
+    //        self.buttonLoadMore.enabled = YES;
+    //        self.buttonLoadMore.title = @"Load More";
+    //    }
 }
 
 
@@ -81,11 +139,9 @@ static int offset;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        //        NSDate *object = self.objects[indexPath.row];
-        //        ProductDetailsViewController *controller = (ProductDetailsViewController *)[[segue destinationViewController] topViewController];
-        //        [controller setDetailItem:object];
-        //        controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-        //        controller.navigationItem.leftItemsSupplementBackButton = YES;
+        Product *product = loadedProducts[indexPath.row];
+        ProductDetailsViewController *productDetailsVC = (ProductDetailsViewController *)[[segue destinationViewController] topViewController];
+        [productDetailsVC setProduct:product];
     }
 }
 
@@ -98,14 +154,20 @@ static int offset;
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return numberOfRows;
+    return numberOfRows;
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    //    NSDate *object = self.objects[indexPath.row];
-    //    cell.textLabel.text = [object description];
+- (CustomCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    CustomCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProductCell" forIndexPath:indexPath];
+    Product *p = loadedProducts[indexPath.row];
+    
+    cell.productNameLabel.text = p.productName;
+    
+    if (!p.image) cell.imgView.image = [UIImage imageNamed:@"noimage.png"];
+    else cell.imgView.image = p.image;
+    
+    cell.descriptionLabel.text = p.description;
     return cell;
 }
 

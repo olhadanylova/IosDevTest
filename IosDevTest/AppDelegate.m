@@ -35,7 +35,7 @@ static NSString *VERSION = @"v1";
 #pragma mark - Split view
 
 - (BOOL)splitViewController:(UISplitViewController *)splitViewController collapseSecondaryViewController:(UIViewController *)secondaryViewController ontoPrimaryViewController:(UIViewController *)primaryViewController {
-    if ([secondaryViewController isKindOfClass:[UINavigationController class]] && [[(UINavigationController *)secondaryViewController topViewController] isKindOfClass:[ProductDetailsViewController class]] && ([(ProductDetailsViewController *)[(UINavigationController *)secondaryViewController topViewController] detailItem] == nil)) return YES;
+    if ([secondaryViewController isKindOfClass:[UINavigationController class]] && [[(UINavigationController *)secondaryViewController topViewController] isKindOfClass:[ProductDetailsViewController class]] && ([(ProductDetailsViewController *)[(UINavigationController *)secondaryViewController topViewController] product] == nil)) return YES;
     else return NO;
 }
 

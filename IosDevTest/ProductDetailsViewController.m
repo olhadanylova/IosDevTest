@@ -7,10 +7,7 @@
 //
 
 #import "ProductDetailsViewController.h"
-
-@interface ProductDetailsViewController ()
-
-@end
+#import "Product.h"
 
 @implementation ProductDetailsViewController
 
@@ -21,6 +18,14 @@
 
 
 - (void)configureView {
+    self.title = [NSString stringWithFormat:@"%@ Details", self.product.productName];
+    
+    if (!self.product.image) self.imgView.image = [UIImage imageNamed:@"noimage.png"];
+    else self.imgView.image = self.product.image;
+    
+    self.productNameLabel.text = self.product.productName;
+    self.priceLabel.text = [@(self.product.price) stringValue];
+    self.descriptionLabel.text = self.product.description;
 }
 
 @end

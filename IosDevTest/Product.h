@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface Product : NSObject
 
-@property (strong, nonatomic) NSString *objectId;
 @property (strong, nonatomic) NSString *productName;
 @property (strong, nonatomic) NSString *description;
+@property float price;
 @property (strong, nonatomic) NSString *imageURL;
-@property double price;
+@property (strong, nonatomic) UIImage *image;
+@property BOOL loaded;
 
 @end

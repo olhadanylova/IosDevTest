@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 @class ProductDetailsViewController;
 
 @interface ProductsViewController : UITableViewController

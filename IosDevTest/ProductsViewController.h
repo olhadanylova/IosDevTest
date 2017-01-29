@@ -11,8 +11,8 @@
 
 @interface ProductsViewController : UITableViewController
 
-@property (strong, nonatomic) ProductDetailsViewController *detailViewController;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *buttonLoadMore;
+@property (nonatomic, strong) ProductDetailsViewController *detailViewController;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *buttonLoadMore;
 - (IBAction)pressedLoadMore:(id)sender;
 
 @end

@@ -12,17 +12,17 @@
 #import "Backendless.h"
 #import "Product.h"
 
-#define PAGESIZE 3
+#define PAGESIZE 10
 
-static long size;
 static int offset;
 
 @interface ProductsViewController () {
+    long totalDataCount;
     BackendlessDataQuery *query;
-    int numberOfRows;
     NSMutableArray *loadedProducts;
 }
 @end
+
 
 @implementation ProductsViewController
 
@@ -30,7 +30,8 @@ static int offset;
     [super viewDidLoad];
     self.detailViewController = (ProductDetailsViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     loadedProducts = [[NSMutableArray alloc] init];
-    [self retrieveProductsOnLoad];
+    totalDataCount = [[[[backendless.persistenceService of:[Product class]] find:nil] data] count];
+    [self getFirstPageAsync];
 }
 
 
@@ -42,50 +43,90 @@ static int offset;
 
 #pragma mark - Paging
 
-// Retrieve first PAGESIZE products.
-- (void)retrieveProductsOnLoad {
+/**
+ Implements async getting first page.
+ 
+ This method is called right after view did load.
+ */
+- (void)getFirstPageAsync {
     offset = 0;
     query = [BackendlessDataQuery query];
     query.queryOptions.pageSize = @(PAGESIZE);
     [[backendless.persistenceService of:[Product class]] find:query
-                                                     response:^(BackendlessCollection *products) { [self getPageAsync:products offset:offset]; }
-                                                        error:^(Fault *fault) { NSLog(@"Server reported an error: %@", fault); }];
+                                                     response:^(BackendlessCollection *products) {
+                                                         [self getPageAsync:products];
+                                                     }
+                                                        error:^(Fault *fault) {
+                                                            NSLog(@"Server reported an error: %@", fault);
+                                                        }];
 }
 
 
-- (void)getPageAsync:(BackendlessCollection *)products offset:(int)offset {
-    for (Product *p in [products getCurrentPage]) [loadedProducts addObject:p];
+/**
+ Implements async getting every next page after the first page.
+ */
+- (void)getNextPageAsync {
+    offset += PAGESIZE;
+    [[[backendless.persistenceService of:[Product class]] find:query]
+     getPage:offset
+     pageSize:PAGESIZE
+     response:^(BackendlessCollection *products) {
+         [self getPageAsync:products];
+     }
+     error:^(Fault *fault) {
+         NSLog(@"Server reported an error: %@", fault);
+     }];
+}
+
+
+/**
+ Implements getting page from BackendlessCollection.
+
+ @param products BackendlessCollection class that represents object collections returned by the find methods.
+ */
+- (void)getPageAsync:(BackendlessCollection *)products {
+    for (Product *product in [products getCurrentPage]) {
+        [loadedProducts addObject:product];
+    }
+    
     [self loadImagesAsync];
-    // Current products count.
-    size = [[products getCurrentPage] count];
-    if (!size) return;
-    numberOfRows += size;
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     
     // Scroll to the last cell.
-        NSIndexPath* ip = [NSIndexPath indexPathForRow:([loadedProducts count] - 1) inSection:0];
-        [self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:([loadedProducts count] - 1) inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    
+    // Make "Load More" buton disabled if all data is loaded.
+    if ([loadedProducts count] == totalDataCount) {
+        self.buttonLoadMore.enabled = NO;
+        self.buttonLoadMore.title = @"All data loaded";
+    }
+    else {
+        self.buttonLoadMore.enabled = YES;
+        self.buttonLoadMore.title = @"Load More";
+    }
 }
 
 
-// Images load asynchronically from product image URL
+/**
+ Implements async getting product image from product image URL.
+ */
 - (void)loadImagesAsync {
     for (int i = 0; i < [loadedProducts count]; i++) {
-        Product *p = loadedProducts[i];
-        if (!p.image && p.imageURL) {
+        Product *product = loadedProducts[i];
+        if (!product.image && product.imageURL) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                            ^{
-                               NSURL *imageURL = [NSURL URLWithString:p.imageURL];
+                               NSURL *imageURL = [NSURL URLWithString:product.imageURL];
                                NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
                                
-                               //This is your completion handler
+                               // Completion header.
                                dispatch_sync(dispatch_get_main_queue(), ^{
-                                   //If self.image is atomic (not declared with nonatomic)
-                                   // you could have set it directly above
-                                   p.image = [UIImage imageWithData:imageData];
-                                   // Reload product cell to show image
-                                   NSIndexPath *ip = [NSIndexPath indexPathForRow:i inSection:0];
-                                   [self.tableView reloadRowsAtIndexPaths:@[ip] withRowAnimation:UITableViewRowAnimationFade];
+                                   product.image = [UIImage imageWithData:imageData];
+                                   
+                                   // Reload product cell to show image.
+                                   NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                                   [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
                                    
                                });
                            });
@@ -94,45 +135,41 @@ static int offset;
 }
 
 
-- (void)reloadTableViewAfterGetPage {
-    
-    numberOfRows += size;
-    
-    
-    //
-    
-    // Scroll to the last cell.
-    //    NSIndexPath* ip = [NSIndexPath indexPathForRow:([loadedProducts count] - 1) inSection:0];
-    //    [self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    
-    
-    
-    
-    //
-    
-    // If all data is displeyed Load More button disabled.
-    //    BackendlessCollection *products = [[backendless.persistenceService of:[Product class]] find:nil];
-    //    if (numberOfRows == [[products getCurrentPage] count]) {
-    //        self.buttonLoadMore.enabled = NO;
-    //        self.buttonLoadMore.title = @"All data loaded";
-    //    }
-    //    else {
-    //        self.buttonLoadMore.enabled = YES;
-    //        self.buttonLoadMore.title = @"Load More";
-    //    }
+#pragma mark - Table View
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
 }
 
 
-#pragma mark - Buttons actions
-
-- (IBAction)pressedLoadMore:(id)sender {
-    // Increase the position of the object from which to retrieve next products.
-    offset += size;
-    [[[backendless.persistenceService of:[Product class]] find:query]   // = BackendlessCollection *products
-     getPage:offset pageSize:PAGESIZE
-     response:^(BackendlessCollection *products) { [self getPageAsync:products offset:offset]; }
-     error:^(Fault *fault) { NSLog(@"Server reported an error: %@", fault); }];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [loadedProducts count];
 }
+
+
+- (CustomCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    CustomCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProductCell" forIndexPath:indexPath];
+    Product *product = loadedProducts[indexPath.row];    
+    
+    // If product image hasn't been loaded yet it's image sets to "noimage.png".
+    if (!product.image) {
+        cell.imgView.image = [UIImage imageNamed:@"noimage.png"];
+    }
+    // If product image has already been loaded.
+    else {
+        cell.imgView.image = product.image;
+    }
+    
+    cell.productNameLabel.text = product.productName;
+    cell.descriptionLabel.text = product.description;
+    return cell;
+}
+
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
 
 #pragma mark - Segues
 
@@ -146,34 +183,10 @@ static int offset;
 }
 
 
-#pragma mark - Table View
+#pragma mark - Buttons actions
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return numberOfRows;
-}
-
-
-- (CustomCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CustomCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProductCell" forIndexPath:indexPath];
-    Product *p = loadedProducts[indexPath.row];
-    
-    cell.productNameLabel.text = p.productName;
-    
-    if (!p.image) cell.imgView.image = [UIImage imageNamed:@"noimage.png"];
-    else cell.imgView.image = p.image;
-    
-    cell.descriptionLabel.text = p.description;
-    return cell;
-}
-
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
+- (IBAction)pressedLoadMore:(id)sender {
+    [self getNextPageAsync];
 }
 
 @end

@@ -13,9 +13,8 @@
 
 @property (strong, nonatomic) NSString *productName;
 @property (strong, nonatomic) NSString *description;
-@property float price;
 @property (strong, nonatomic) NSString *imageURL;
 @property (strong, nonatomic) UIImage *image;
-@property BOOL loaded;
+@property float price;
 
 @end

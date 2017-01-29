@@ -61,32 +61,31 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="descriptionLabel" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="czx-7r-sPJ">
-                                <rect key="frame" x="24" y="259" width="327" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="justified" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ID-vQ-epR">
+                                <rect key="frame" x="24" y="259" width="327" height="378"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="czx-7r-sPJ" firstAttribute="top" secondItem="aNg-gS-RBP" secondAttribute="bottom" constant="30" id="1It-XO-VMX"/>
                             <constraint firstItem="aNg-gS-RBP" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leading" constant="15" id="3Si-8w-KT3"/>
                             <constraint firstItem="g3j-uK-1Yy" firstAttribute="top" secondItem="CTn-Or-m4m" secondAttribute="bottom" constant="10" id="439-bF-Yrw"/>
                             <constraint firstItem="CTn-Or-m4m" firstAttribute="leading" secondItem="aNg-gS-RBP" secondAttribute="trailing" constant="25" id="CLD-SW-LnK"/>
-                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="czx-7r-sPJ" secondAttribute="bottom" priority="250" constant="30" id="Ilu-Qa-X5M"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="czx-7r-sPJ" secondAttribute="trailing" constant="8" id="JMb-lG-o7L"/>
+                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="3ID-vQ-epR" secondAttribute="bottom" constant="30" id="PyA-Nt-mGX"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="3ID-vQ-epR" secondAttribute="trailing" constant="8" id="TbS-fl-J8y"/>
+                            <constraint firstItem="3ID-vQ-epR" firstAttribute="top" secondItem="aNg-gS-RBP" secondAttribute="bottom" constant="30" id="Y3x-IS-VSc"/>
+                            <constraint firstItem="3ID-vQ-epR" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" constant="8" id="Zlw-lX-GDU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="CTn-Or-m4m" secondAttribute="trailing" constant="8" id="dN6-lZ-FcS"/>
                             <constraint firstItem="g3j-uK-1Yy" firstAttribute="leading" secondItem="aNg-gS-RBP" secondAttribute="trailing" constant="25" id="g6W-dD-zbo"/>
                             <constraint firstItem="CTn-Or-m4m" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" constant="60" id="jyY-oJ-005"/>
-                            <constraint firstItem="czx-7r-sPJ" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" constant="8" id="plH-gV-oR4"/>
                             <constraint firstItem="aNg-gS-RBP" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" constant="15" id="syj-1B-tB6"/>
                         </constraints>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Detail" id="mOI-FS-AaM"/>
                     <connections>
-                        <outlet property="descriptionLabel" destination="czx-7r-sPJ" id="wM4-aq-aKR"/>
+                        <outlet property="descriptionTextView" destination="3ID-vQ-epR" id="WJD-43-Hdh"/>
                         <outlet property="imgView" destination="aNg-gS-RBP" id="zOd-hR-yYS"/>
                         <outlet property="priceLabel" destination="g3j-uK-1Yy" id="cQC-kH-2xI"/>
                         <outlet property="productNameLabel" destination="CTn-Or-m4m" id="Swi-To-oPY"/>
@@ -123,7 +122,7 @@
                                 <rect key="frame" x="0.0" y="22" width="375" height="128"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WCw-Qf-5nD" id="37f-cq-3Eg">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="127"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="128"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="productName" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lC4-zj-myo">

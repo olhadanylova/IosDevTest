@@ -35,7 +35,7 @@
     
     self.productNameLabel.text = self.product.productName;
     self.priceLabel.text = [@(self.product.price) stringValue];
-    self.descriptionLabel.text = self.product.description;
+    self.descriptionTextView.text = self.product.description;
 }
 
 @end

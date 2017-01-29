@@ -15,7 +15,7 @@
 @property (nonatomic, strong) IBOutlet UIImageView *imgView;
 @property (nonatomic, strong) IBOutlet UILabel *productNameLabel;
 @property (nonatomic, strong) IBOutlet UILabel *priceLabel;
-@property (nonatomic, strong) IBOutlet UILabel *descriptionLabel;
+@property (strong, nonatomic) IBOutlet UITextView *descriptionTextView;
 
 @end
 

@@ -14,7 +14,7 @@
 
 #define PAGESIZE 10
 
-static int offset;
+static int offset = 0;
 
 @interface ProductsViewController () {
     long totalDataCount;
@@ -49,7 +49,6 @@ static int offset;
  This method is called right after view did load.
  */
 - (void)getFirstPageAsync {
-    offset = 0;
     query = [BackendlessDataQuery query];
     query.queryOptions.pageSize = @(PAGESIZE);
     [[backendless.persistenceService of:[Product class]] find:query
@@ -161,7 +160,7 @@ static int offset;
     }
     
     cell.productNameLabel.text = product.productName;
-    cell.descriptionLabel.text = product.description;
+    cell.productDescriptionLabel.text = product.productDescription;
     return cell;
 }
 

@@ -7,7 +7,6 @@
 //
 
 #import "CustomCell.h"
-#import "Product.h"
 
 @implementation CustomCell
 @end

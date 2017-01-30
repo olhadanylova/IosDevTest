@@ -13,6 +13,6 @@
 
 @property (strong, nonatomic) IBOutlet UIImageView *imgView;
 @property (strong, nonatomic) IBOutlet UILabel *productNameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (strong, nonatomic) IBOutlet UILabel *productDescriptionLabel;
 
 @end

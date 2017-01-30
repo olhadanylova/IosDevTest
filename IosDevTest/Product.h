@@ -12,7 +12,7 @@
 @interface Product : NSObject
 
 @property (strong, nonatomic) NSString *productName;
-@property (strong, nonatomic) NSString *description;
+@property (strong, nonatomic) NSString *productDescription;
 @property (strong, nonatomic) NSString *imageURL;
 @property (strong, nonatomic) UIImage *image;
 @property float price;

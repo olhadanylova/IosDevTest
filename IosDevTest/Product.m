@@ -9,5 +9,4 @@
 #import "Product.h"
 
 @implementation Product
-@synthesize description;
 @end

@@ -34,8 +34,8 @@
     }
     
     self.productNameLabel.text = self.product.productName;
-    self.priceLabel.text = [@(self.product.price) stringValue];
-    self.descriptionTextView.text = self.product.productDescription;
+    self.priceLabel.text = [NSString stringWithFormat:@"%.2f", self.product.price];
+    self.productDescriptionTextView.text = self.product.productDescription;
 }
 
 @end

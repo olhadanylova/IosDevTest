@@ -97,7 +97,7 @@ static int offset = 0;
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     }
     
-    // Make "Load More" buton disabled if all data is loaded.
+    // Make "Load More" button disabled if all data is loaded.
     if ([loadedProducts count] == totalDataCount) {
         self.buttonLoadMore.enabled = NO;
         self.buttonLoadMore.title = @"All data loaded";
@@ -115,7 +115,7 @@ static int offset = 0;
 - (void)loadImagesAsync {
     for (int i = 0; i < [loadedProducts count]; i++) {
         Product *product = loadedProducts[i];
-        if (!product.image && product.imageURL) {
+        if (!product.image && ![product.imageURL isEqualToString:@""]) {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
                            ^{
                                NSURL *imageURL = [NSURL URLWithString:product.imageURL];

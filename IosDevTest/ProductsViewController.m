@@ -80,7 +80,7 @@ static int offset = 0;
 
 /**
  Implements getting page from BackendlessCollection.
-
+ 
  @param products BackendlessCollection class that represents object collections returned by the find methods.
  */
 - (void)getPageAsync:(BackendlessCollection *)products {
@@ -92,8 +92,10 @@ static int offset = 0;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     
     // Scroll to the last cell.
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:([loadedProducts count] - 1) inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    if ([loadedProducts count] > 0) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:([loadedProducts count] - 1) inSection:0];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
     
     // Make "Load More" buton disabled if all data is loaded.
     if ([loadedProducts count] == totalDataCount) {
@@ -148,7 +150,7 @@ static int offset = 0;
 
 - (CustomCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     CustomCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ProductCell" forIndexPath:indexPath];
-    Product *product = loadedProducts[indexPath.row];    
+    Product *product = loadedProducts[indexPath.row];
     
     // If product image hasn't been loaded yet it's image sets to "noimage.png".
     if (!product.image) {
